@@ -3,8 +3,8 @@ import re
 import time
 from datetime import datetime
 
-INPUT_FOLDER = r"C:\Users\adria\Desktop\entry_list editor\Entry list editor\input"
-OUTPUT_FOLDER = r"C:\Users\adria\Desktop\entry_list editor\Entry list editor\output"
+INPUT_FOLDER = r""
+OUTPUT_FOLDER = r""
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -21,7 +21,7 @@ def process_file(input_path):
             if not section.strip():
                 continue
 
-            section = re.sub(r"\nAI=.*", "", section)  # remove old AI lines
+            section = re.sub(r"\nAI=.*", "", section) 
             ai_line = "AI=none" if "/ADAn" in section else "AI=fixed"
             section = re.sub(r"(RESTRICTOR=0)(\s*)", r"\1\n" + ai_line, section, count=1)
             new_sections.append(section.strip())
@@ -33,8 +33,7 @@ def process_file(input_path):
         new_sections.sort(key=car_number)
 
         edited = "\n\n".join(new_sections) + "\n"
-
-        # create unique output file using timestamp
+        
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_file = os.path.join(OUTPUT_FOLDER, f"entry_list_{timestamp}.ini")
 
@@ -66,3 +65,4 @@ while True:
             processed[filename] = mtime
 
     time.sleep(5)
+
