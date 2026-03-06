@@ -11,15 +11,11 @@ Written on `Windows` environment
 
 
 # ⚙️ Configuration
+## In VS Code
+- Open "Developer Command Prompt" (search it in Start menu by pressing > then searching)
 
-~~In the editor.py, put in the input file location and output file location (need to be folders~~
-```
-EX; INPUT_FOLDER = r"C:\Users\Desktop\entry_list editor\Entry list editor\input"
-    OUTPUT_FOLDER = r"C:\Users\Desktop\entry_list editor\Entry list editor\output"
-```
-In VS Code
-- Open "Developer Command Prompt for VS" (search it in Start menu)
 - Navigate to your .cpp folder: ``cd C:\path\to\folder``
+  
 - Run: ``cl /EHsc /std:c++17 entry_list_fixer.cpp /Fe:entry_list_fixer.exe``
 
 Normally, once you have the exe, all you should need to do is drag the ini or txt file you want into the exe, and it will output the new file and keep the old one. 
