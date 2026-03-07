@@ -1,39 +1,39 @@
 # Entry List Editor
 
-A simple Python script that edits your Assetto Corsa entry lists based on the names of your cars to add AI=fixed or AI=none
+A simple CPP that edits your Assetto Corsa entry lists based on the names of your cars to add AI=fixed or AI=none
 
 
 # ❗ Disclaimer
-Code looks for the words traffic in to find traffic cars, if your not using traffic cars in the name this wont work.
-It also doesn't have the functionality to set AI to auto yet. In the future, possibly add on to make the script more advanced. 
+Code looks for the words traffic in to find traffic cars, if your not using traffic cars in the name, this wont work.
+It also doesn't have the functionality to set AI to auto yet. In the future, possibly add on to make the code more advanced. 
 
 Written on `Windows` environment
 
 
-# ⚙️ Configuration
+# ⚙️ Edit and compile your own
+## In Google
+- Go to https://code.visualstudio.com/docs/cpp/config-mingw and download the direct installer
 
-In the editor.py, put in the input file location and output file location (need to be folders
-```
-EX; INPUT_FOLDER = r"C:\Users\Desktop\entry_list editor\Entry list editor\input"
-    OUTPUT_FOLDER = r"C:\Users\Desktop\entry_list editor\Entry list editor\output"
-```
+- Run the exe and click through the installation
 
-# ⏬ Installation ``Ubuntu``
-Install Python; [Link if needed](https://www.python.org/downloads/) 
+- Once installed search on your computer ``MYSYS2`` and open it
 
-###### If you're missing a dependency, put it in the issues so I can update it
-# 🤖 Running the script
+- Once you open it paste in this code ``pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain``
 
-Make sure you're in the central file for the bot 
-`Windows`
-```
-cd ..\Assetto-Hub-bot-main
-```
+- Click ``Enter`` and ``Enter`` agian, then press ``Y`` and ``Enter``
 
-You can start the Bot `WINDOWS`
-```
-python editor.py
-```
+- Once its finished installing go to ``Environment Variables`` and go to ``Environment Variables`` , edit the ``PATH`` section
 
-Normally, the terminal should say ✅ Bot started. Watching input folder
+-  Click ``New`` and put ``C:\msys64\ucrt64\bin``
 
+## In VS Code
+- Open "Extensions" section
+
+- Look up ``C/C++`` and install it
+
+- Now At the top click the run button then press ``Run C/C++ File``
+
+Normally, it will compile the exe and you should be good to go
+
+# ❗ Regular Use
+If your looking to just use the exe, download the exe from the versions and it just drag and drop your entry_list.ini's. If your looking to edit the code follow the instructions above
