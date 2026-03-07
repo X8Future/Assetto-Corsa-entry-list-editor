@@ -86,6 +86,12 @@ std::string insertAILine(const std::string& section, const std::string& aiLine) 
     return result.str();
 }
 
+std::string toLower(const std::string& s) {
+    std::string out = s;
+    std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+    return out;
+}
+
 std::string trim(const std::string& s) {
     size_t start = s.find_first_not_of(" \t\r\n");
     size_t end = s.find_last_not_of(" \t\r\n");
@@ -93,14 +99,35 @@ std::string trim(const std::string& s) {
     return s.substr(start, end - start + 1);
 }
 
-bool processFile(const fs::path& inputPath) {
-    std::cout << "Processing: " << inputPath.filename().string() << "\n";
+std::string determineAIValue(const std::string& section) {
+    std::vector<std::string> noneSkinCodes = { "/ADAn", "/ACA3", "/ABAH" };
+    for (const auto& code : noneSkinCodes) {
+        if (section.find(code) != std::string::npos) {
+            return "AI=none";
+        }
+    }
+
+    std::istringstream stream(section);
+    std::string line;
+    while (std::getline(stream, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        if (line.rfind("MODEL=", 0) == 0) {
+            std::string modelValue = line.substr(6);
+            if (toLower(modelValue).find("traffic") != std::string::npos) {
+                return "AI=fixed";
+            }
+        }
+    }
+
+    return "AI=fixed";
+}
+
+bool processFile(const fs::path& rawInputPath) {
+    fs::path inputPath = fs::absolute(rawInputPath);
 
     std::ifstream inFile(inputPath, std::ios::in);
-    if (!inFile) {
-        std::cerr << "Could not open input file: " << inputPath << "\n";
-        return false;
-    }
+    if (!inFile) return false;
+
     std::ostringstream buf;
     buf << inFile.rdbuf();
     std::string content = buf.str();
@@ -111,15 +138,9 @@ bool processFile(const fs::path& inputPath) {
 
     for (auto& section : sections) {
         if (trim(section).empty()) continue;
-
         section = removeAILines(section);
-
-        std::string aiLine = (section.find("/ADAn") != std::string::npos)
-            ? "AI=none"
-            : "AI=fixed";
-      
+        std::string aiLine = determineAIValue(section);
         section = insertAILine(section, aiLine);
-
         processed.push_back(trim(section));
     }
 
@@ -135,45 +156,37 @@ bool processFile(const fs::path& inputPath) {
     output += "\n";
 
     fs::path outputDir = inputPath.parent_path();
-    std::string timestamp = getTimestamp();
-    fs::path outputPath = outputDir / ("entry_list_" + timestamp + ".ini");
+    fs::path outputPath = outputDir / "entry_list.ini";
+
+    bool inputIsOutputName = (fs::canonical(inputPath) == fs::weakly_canonical(outputPath));
+
+    if (inputIsOutputName) {
+        fs::path backupPath = outputDir / ("original_entry_list.ini");
+        fs::rename(inputPath, backupPath);
+    } else {
+        fs::path renamedInput = outputDir / ("original_entry_list" + inputPath.extension().string());
+        fs::rename(inputPath, renamedInput);
+
+        if (fs::exists(outputPath)) {
+            fs::path backupPath = outputDir / ("original_entry_list.ini");
+            fs::rename(outputPath, backupPath);
+        }
+    }
 
     std::ofstream outFile(outputPath, std::ios::out);
-    if (!outFile) {
-        std::cerr << "Could not write output file: " << outputPath << "\n";
-        return false;
-    }
+    if (!outFile) return false;
     outFile << output;
     outFile.close();
 
-    std::cout << "Output written to: " << outputPath.filename().string() << "\n";
     return true;
 }
 
 int main(int argc, char* argv[]) {
-    std::cout << "=== Entry List Fixer ===\n";
-
-    if (argc < 2) {
-        std::cout << "Usage: Drag and drop a .ini or .txt file onto this executable,\n";
-        std::cout << "       or run: entry_list_fixer.exe <input_file>\n";
-        std::cout << "\nPress Enter to exit...";
-        std::cin.get();
-        return 1;
-    }
+    if (argc < 2) return 1;
 
     fs::path inputPath = argv[1];
+    if (!fs::exists(inputPath)) return 1;
 
-    if (!fs::exists(inputPath)) {
-        std::cerr << "File not found: " << inputPath << "\n";
-        std::cout << "\nPress Enter to exit...";
-        std::cin.get();
-        return 1;
-    }
-
-    bool ok = processFile(inputPath);
-
-    std::cout << (ok ? "\nDone!" : "\nFailed.") << "\n";
-    std::cout << "Press Enter to exit...";
-    std::cin.get();
-    return ok ? 0 : 1;
+    processFile(inputPath);
+    return 0;
 }
