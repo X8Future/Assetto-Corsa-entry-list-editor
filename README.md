@@ -10,12 +10,30 @@ It also doesn't have the functionality to set AI to auto yet. In the future, pos
 Written on `Windows` environment
 
 
-# ⚙️ Configuration
+# ⚙️ Edit and compile your own
+## In Google
+- Go to https://code.visualstudio.com/docs/cpp/config-mingw and download the direct installer
+
+- Run the exe and click through the installation
+
+- Once installed search on your computer ``MYSYS2`` and open it
+
+- Once you open it paste in this code ``pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain``
+
+- Click ``Enter`` and ``Enter`` agian, then press ``Y`` and ``Enter``
+
+- Once its finished installing go to ``Environment Variables`` and go to ``Environment Variables`` , edit the ``PATH`` section
+
+-  Click ``New`` and put ``C:\msys64\ucrt64\bin``
+
 ## In VS Code
-- Open "Developer Command Prompt" (search it in Start menu by pressing > then searching)
+- Open "Extensions" section
 
-- Navigate to your .cpp folder: ``cd C:\path\to\folder``
-  
-- Run: ``cl /EHsc /std:c++17 entry_list_fixer.cpp /Fe:entry_list_fixer.exe``
+- Look up ``C/C++`` and install it
 
-Normally, once you have the exe, all you should need to do is drag the ini or txt file you want into the exe, and it will output the new file and keep the old one. 
+- Now At the top click the run button then press ``Run C/C++ File``
+
+Normally, it will compile the exe and you should be good to go
+
+# ❗ Regular Use
+If your looking to just use the exe, download the exe from the versions and it just drag and drop your entry_list.ini's. If your looking to edit the code follow the instructions above
